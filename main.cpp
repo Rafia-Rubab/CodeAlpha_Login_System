@@ -1,28 +1,60 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <limits>
+#include <conio.h>   // for _getch()
 using namespace std;
 
-// Check if user exists
+// ?? Hidden Password Function
+string getHiddenPassword() {
+    string password = "";
+    char ch;
+
+    while (true) {
+        ch = _getch();
+
+        if (ch == 13) { // Enter key
+            break;
+        }
+        else if (ch == 8) { // Backspace
+            if (!password.empty()) {
+                password.pop_back();
+                cout << "\b \b";
+            }
+        }
+        else {
+            password += ch;
+            cout << "*";
+        }
+    }
+    cout << endl;
+    return password;
+}
+
+// ?? Check if user exists
 bool userExists(string username) {
     ifstream file("users.txt");
-    string user, pass;
+    string line, user;
 
-    while (file >> user >> pass) {
-        if (user == username) {
-            return true;
+    while (getline(file, line)) {
+        int pos = line.find('|');
+        if (pos != string::npos) {
+            user = line.substr(0, pos);
+            if (user == username) {
+                return true;
+            }
         }
     }
     return false;
 }
 
-// Registration
+// ?? Registration
 void registerUser() {
     string username, password;
 
     cout << "\n--- Registration ---\n";
 
-    cin.ignore(); // IMPORTANT FIX
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
     cout << "Enter username: ";
     getline(cin, username);
@@ -33,41 +65,48 @@ void registerUser() {
     }
 
     cout << "Enter password: ";
-    getline(cin, password);
+    password = getHiddenPassword();
 
     if (username.length() < 3 || password.length() < 4) {
-        cout << "Error: Invalid input length!\n";
+        cout << "Error: Username must be >=3 and password >=4 characters!\n";
         return;
     }
 
     ofstream file("users.txt", ios::app);
-    file << username << " " << password << endl;
+    file << username << "|" << password << endl;
 
     cout << "Registration Successful!\n";
 }
 
-// Login
+// ?? Login
 void loginUser() {
     string username, password;
-    string user, pass;
+    string line, user, pass;
     bool found = false;
 
     cout << "\n--- Login ---\n";
 
-    cin.ignore(); // IMPORTANT FIX
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
     cout << "Enter username: ";
     getline(cin, username);
 
     cout << "Enter password: ";
-    getline(cin, password);
+    password = getHiddenPassword();
 
     ifstream file("users.txt");
 
-    while (file >> user >> pass) {
-        if (user == username && pass == password) {
-            found = true;
-            break;
+    while (getline(file, line)) {
+        int pos = line.find('|');
+
+        if (pos != string::npos) {
+            user = line.substr(0, pos);
+            pass = line.substr(pos + 1);
+
+            if (user == username && pass == password) {
+                found = true;
+                break;
+            }
         }
     }
 
@@ -78,7 +117,7 @@ void loginUser() {
     }
 }
 
-// Main
+// ?? Main Menu
 int main() {
     int choice;
 
@@ -98,7 +137,7 @@ int main() {
                 loginUser();
                 break;
             case 3:
-                cout << "Exiting...\n";
+                cout << "Exiting program...\n";
                 break;
             default:
                 cout << "Invalid choice!\n";
