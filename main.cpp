@@ -5,7 +5,7 @@
 #include <conio.h>   // for _getch()
 using namespace std;
 
-// ?? Hidden Password Function
+//  Hidden Password Function
 string getHiddenPassword() {
     string password = "";
     char ch;
@@ -31,7 +31,7 @@ string getHiddenPassword() {
     return password;
 }
 
-// ?? Check if user exists
+//  Check if user exists
 bool userExists(string username) {
     ifstream file("users.txt");
     string line, user;
@@ -48,7 +48,7 @@ bool userExists(string username) {
     return false;
 }
 
-// ?? Registration
+//  Registration
 void registerUser() {
     string username, password;
 
@@ -78,7 +78,7 @@ void registerUser() {
     cout << "Registration Successful!\n";
 }
 
-// ?? Login
+//  Login
 void loginUser() {
     string username, password;
     string line, user, pass;
@@ -117,7 +117,7 @@ void loginUser() {
     }
 }
 
-// ?? Main Menu
+//  Main Menu
 int main() {
     int choice;
 
