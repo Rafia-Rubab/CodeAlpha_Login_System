@@ -2,11 +2,11 @@
 #include <fstream>
 #include <string>
 #include <limits>
-#include <conio.h>   // for _getch()
+#include <conio.h>   // for_getch()
 
 using namespace std;
 
-// Hidden Password Function
+// Hidden Password Function (Windows only)
 string getHiddenPassword() {
     string password = "";
     char ch;
@@ -32,7 +32,7 @@ string getHiddenPassword() {
     return password;
 }
 
-// Check if user exists
+// Check if user already exists
 bool userExists(string username) {
     ifstream file("users.txt");
     string line, user;
@@ -49,7 +49,7 @@ bool userExists(string username) {
     return false;
 }
 
-// Registration
+// Registration Function
 void registerUser() {
     string username, password;
 
@@ -57,6 +57,17 @@ void registerUser() {
 
     cout << "Enter username: ";
     getline(cin, username);
+
+    // Validation
+    if (username.empty()) {
+        cout << "Error: Username cannot be empty!\n";
+        return;
+    }
+
+    if (username.find('|') != string::npos) {
+        cout << "Error: '|' character not allowed!\n";
+        return;
+    }
 
     if (userExists(username)) {
         cout << "Error: Username already exists!\n";
@@ -67,7 +78,7 @@ void registerUser() {
     password = getHiddenPassword();
 
     if (username.length() < 3 || password.length() < 4) {
-        cout << "Error: Username must be >=3 and password >=4 characters!\n";
+        cout << "Error: Username >=3 and password >=4 characters required!\n";
         return;
     }
 
@@ -77,7 +88,7 @@ void registerUser() {
     cout << "Registration Successful!\n";
 }
 
-// Login
+// Login Function
 void loginUser() {
     string username, password;
     string line, user, pass;
@@ -114,7 +125,7 @@ void loginUser() {
     }
 }
 
-// Main Menu
+// Main Function
 int main() {
     int choice;
 
@@ -124,9 +135,10 @@ int main() {
         cout << "2. Login\n";
         cout << "3. Exit\n";
         cout << "Enter choice: ";
+
         cin >> choice;
 
-        // Fix for getline issue
+        // FIX: Clear input buffer before getline
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
         switch (choice) {
