@@ -3,9 +3,10 @@
 #include <string>
 #include <limits>
 #include <conio.h>   // for _getch()
+
 using namespace std;
 
-//  Hidden Password Function
+// Hidden Password Function
 string getHiddenPassword() {
     string password = "";
     char ch;
@@ -31,7 +32,7 @@ string getHiddenPassword() {
     return password;
 }
 
-//  Check if user exists
+// Check if user exists
 bool userExists(string username) {
     ifstream file("users.txt");
     string line, user;
@@ -48,13 +49,11 @@ bool userExists(string username) {
     return false;
 }
 
-//  Registration
+// Registration
 void registerUser() {
     string username, password;
 
     cout << "\n--- Registration ---\n";
-
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
     cout << "Enter username: ";
     getline(cin, username);
@@ -78,15 +77,13 @@ void registerUser() {
     cout << "Registration Successful!\n";
 }
 
-//  Login
+// Login
 void loginUser() {
     string username, password;
     string line, user, pass;
     bool found = false;
 
     cout << "\n--- Login ---\n";
-
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
     cout << "Enter username: ";
     getline(cin, username);
@@ -117,7 +114,7 @@ void loginUser() {
     }
 }
 
-//  Main Menu
+// Main Menu
 int main() {
     int choice;
 
@@ -128,6 +125,9 @@ int main() {
         cout << "3. Exit\n";
         cout << "Enter choice: ";
         cin >> choice;
+
+        // Fix for getline issue
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
         switch (choice) {
             case 1:
